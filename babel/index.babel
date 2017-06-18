@@ -1,0 +1,45 @@
+var App = React.createClass({
+    updateValue:function(changedValue){
+        this.setState({
+            value: changedValue
+        })
+    },
+
+    getInitialState:function(){
+        return{
+            value:'A First Level Header\n=======\n\nA Second Level Header\n-----------\n \n### Header 3\n \n> This is a blockquote.\n>\n> This is the second paragraph in the blockquote.\n>\n> ### This is an H3 in a blockquote\n\nLeave 2 spaces at the end of a line to do a  \nline break\n\nText attributes *italic*, **bold**, \n`monospace`, ~~strikethrough~~ .\n\n**Unordered lists use asterisks, pluses, and hyphens (*, +, and -) as list markers:**\n\n  * Kings\n  * Queens\n  * Pawns\n\n**Ordered (numbered) lists use regular numbers:**\n\n  1. Kings\n  2. Queens\n  3. Pawns\n\n\n *[Yevhen Susidka](https://www.freecodecamp.com/yevhensu)*\n\nFork of an original work by *[Herman Fassett](http://codepen.io/hermanfassett/pen/EPywYy)*'
+        }
+    },
+
+    markuped: function(value) {
+      var markuped = marked(value, {sanitize: true});
+      return { __html: markuped };
+    },
+
+    render:function(){
+        return (
+          <div className="row">
+            <div className="col-md-6">
+              <h2>You can type GitHub-flavored Markdown into a text area</h2>
+              <MarkedInput value={this.state.value} updateValue={this.updateValue}/>
+            </div>
+            <div className="col-md-6">
+              <span dangerouslySetInnerHTML={this.markuped(this.state.value)} />
+            </div>
+          </div>
+        );
+    }
+});
+
+var MarkedInput = React.createClass({
+    update:function(){
+        var changedValue=this.refs.inputValue.getDOMNode().value;
+        this.props.updateValue(changedValue);
+    },
+
+    render:function(){
+        return (<textarea rows="28" type="text" ref="inputValue" value={this.props.value} onChange={this.update} className="form-control" />)
+    }
+});
+
+React.render(<App />,document.getElementById("app"));
